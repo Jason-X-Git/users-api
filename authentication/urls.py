@@ -1,6 +1,6 @@
 from authentication.views import CustomUserViewSet, CustomPermissionViewSet, api_root
 from rest_framework.urlpatterns import format_suffix_patterns
-from django.urls import path, include
+from django.urls import path, re_path
 
 user_list = CustomUserViewSet.as_view({
     'get': 'list',
@@ -31,5 +31,5 @@ urlpatterns = format_suffix_patterns([
     path('permissions/', permission_list, name='permission-list'),
     path('permissions/<int:pk>/', permission_detail, name='permission-detail'),
     path('users/', user_list, name='user-list'),
-    path('users/<int:pk>/', user_detail, name='user-detail')
+    path('users/<int:pk>/', user_detail, name='user-detail'),
 ])

@@ -17,8 +17,14 @@ def api_root(request, format=None):
 
 
 class CustomUserViewSet(viewsets.ModelViewSet):
-    queryset = CustomUser.objects.select_related('custom_permission').all()
     serializer_class = CustomUserSerializer
+
+    def get_queryset(self):
+        queryset = CustomUser.objects.select_related('custom_permission').all()
+        family_name = self.request.query_params.get('family_name')
+        if family_name is not None:
+            queryset = queryset.filter(family_name__iexact=family_name)
+        return queryset
 
 
 class CustomPermissionViewSet(viewsets.ModelViewSet):

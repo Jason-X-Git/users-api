@@ -5,6 +5,7 @@ from authentication.models import CustomUser, CustomPermission
 from authentication.serializers import CustomUserSerializer, CustomPermissionSerializer
 from rest_framework.test import APITestCase
 import random
+from django.utils.http import urlencode
 
 # initialize the APIClient app
 client = Client()
@@ -16,8 +17,11 @@ class UserGetTest(APITestCase):
     def setUp(self):
         self.users = []
         self.user_number = 5
-        for i in range(self.user_number):
-            user = CustomUser(email='test-user-{}@msn.com'.format(i))
+        self.family_names = ['Andrews', 'Lewis', 'Fletcher', 'Bale', 'Messi']
+        for family_name in self.family_names:
+            user = CustomUser(email='user-{}@email-host.com'.format(family_name.lower()),
+                              family_name=family_name,
+                              )
             user.set_password('1234qwer@')
             user.save()
             self.users.append(user)
@@ -35,10 +39,17 @@ class UserGetTest(APITestCase):
 
     def test_get_user_by_id(self):
         """Test getting user by id"""
-        user = self.users[random.randint(0, len(self.users)-1)]
+        user = self.users[random.randint(0, len(self.users) - 1)]
         response = self.client.get(reverse('user-detail', kwargs={'pk': user.id}))
         serializer = CustomUserSerializer(user)
         self.assertEqual(response.data, serializer.data)
+
+    def test_search_user(self):
+        """Test searching users by family name"""
+        search_family_name = self.family_names[random.randint(0, len(self.family_names) - 1)]
+        response = self.client.get(reverse('user-list') + '?'
+                                   + urlencode({'family_name': search_family_name}))
+        self.assertEqual(response.data[0].get('family_name'), search_family_name)
 
 
 class UserCreateDeleteTest(APITestCase):

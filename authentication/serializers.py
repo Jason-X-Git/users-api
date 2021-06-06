@@ -10,7 +10,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
         fields = ('id', 'email', 'given_name', 'family_name',
                   'date_joined', 'is_staff', 'is_active', 'custom_permission')
         write_only_fields = ('password',)
-        read_only_fields = ('id',)
+        read_only_fields = ('id', 'date_joined', )
 
     def create(self, validated_data):
         password = validated_data.pop('password', None)
