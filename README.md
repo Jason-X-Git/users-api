@@ -18,7 +18,7 @@ $ python manage.py makemigrations authentication
 $ python manage.py migrate
 $ python manage.py runserver
 ```
-Navigate to http://localhost:8000/
+Navigate to http://localhost:8000/api
 ```bash
 # Testing
 $ python manage.py test
